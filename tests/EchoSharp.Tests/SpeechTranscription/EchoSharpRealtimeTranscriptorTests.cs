@@ -10,7 +10,6 @@ using EchoSharp.WebRtc.WebRtcVadSharp;
 using EchoSharp.Onnx.SileroVad;
 using SherpaOnnx;
 using EchoSharp.Onnx.Sherpa.SpeechTranscription;
-using FluentAssertions;
 using EchoSharp.VoiceActivityDetection;
 
 namespace EchoSharp.Tests.SpeechTranscription;
@@ -39,7 +38,11 @@ public class EchoSharpRealtimeTranscriptorTests
 
         vadDetectorFactory = vadDetector == "webrtc"
             ? new WebRtcVadSharpDetectorFactory(new WebRtcVadSharpOptions())
-            : new SileroVadDetectorFactory(new SileroVadOptions("./models/silero_vad.onnx"));
+            : new SileroVadDetectorFactory(new SileroVadOptions("./models/silero_vad.onnx")
+            {
+                Threshold = 0.2f,
+                ThresholdGap = 0.05f
+            });
 
         var modelConfig = new OnlineModelConfig();
         var ctcFstDecoderConfig = new OnlineCtcFstDecoderConfig();
@@ -60,7 +63,16 @@ public class EchoSharpRealtimeTranscriptorTests
                 OnlineCtcFstDecoderConfig = ctcFstDecoderConfig
             });
 
-        var realTimeTranscriptorFactory = new EchoSharpRealtimeTranscriptorFactory(transcritorFactory, vadDetectorFactory);
+        var vadDetectorOptions = new VadDetectorOptions
+        {
+            MinSpeechDuration = TimeSpan.FromMilliseconds(50),
+            MinSilenceDuration = TimeSpan.FromMilliseconds(50)
+        };
+
+        var realTimeTranscriptorFactory = new EchoSharpRealtimeTranscriptorFactory(
+            transcritorFactory,
+            vadDetectorFactory,
+            vadDetectorOptions: vadDetectorOptions);
 
         var readlTimeTranscriptor = realTimeTranscriptorFactory.Create(new RealtimeSpeechTranscriptorOptions()
         {
@@ -99,10 +111,10 @@ public class EchoSharpRealtimeTranscriptorTests
         var recognizingEvents = events.OfType<RealtimeSegmentRecognizing>().ToList();
         var recognizedEvents = events.OfType<RealtimeSegmentRecognized>().ToList();
 
-        recognizingEvents.Should().HaveCountGreaterThanOrEqualTo(1);
-        recognizedEvents.Should().HaveCountGreaterThanOrEqualTo(1);
-        events.First().Should().BeOfType<RealtimeSessionStarted>();
-        events.Last().Should().BeOfType<RealtimeSessionStopped>();
+        Assert.NotEmpty(recognizingEvents);
+        Assert.NotEmpty(recognizedEvents);
+        Assert.IsType<RealtimeSessionStarted>(events.First());
+        Assert.IsType<RealtimeSessionStopped>(events.Last());
     }
 
     private static async Task<List<IRealtimeRecognitionEvent>> Process(IRealtimeSpeechTranscriptor transcriptor, IAwaitableAudioSource source)
@@ -124,4 +136,3 @@ public class EchoSharpRealtimeTranscriptorTests
         return events;
     }
 }
-
