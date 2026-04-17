@@ -8,7 +8,6 @@
 		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 		<CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
 		<LangVersion>13</LangVersion>
-		<PackageId>YellowDogMan.Echosharp</PackageId>
 
 		<Authors>Sandro Hanea</Authors>
 		<PackageProjectUrl>https://github.com/Yellow-Dog-Man/echosharp</PackageProjectUrl>

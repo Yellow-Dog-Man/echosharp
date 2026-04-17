@@ -17,7 +17,8 @@ jobs:
       - name: 'Build NuGet'
         uses: Yellow-Dog-Man/composite-actions-templates/.github/actions/dotnet-build@9ecab12bbf1b40d14409bbaa13cb4f2ddb1ceb60 # main
         with:
-          dotnet-build-args: '-p:Version=${{ github.ref_name }}'
+          dotnet-build-args: '-p:Version=${{ github.ref_name }} -o nupkgs'
+          dotnet-project-path: 'src/EchoSharp/EchoSharp.csproj'
 
       - name: 'Push NuGet'
         uses: Yellow-Dog-Man/composite-actions-templates/.github/actions/dotnet-build-push-nuget@9ecab12bbf1b40d14409bbaa13cb4f2ddb1ceb60 # main
