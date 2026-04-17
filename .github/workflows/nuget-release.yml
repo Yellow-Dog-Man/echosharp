@@ -10,6 +10,14 @@ jobs:
     name: 'Publish package to NuGet'
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        project:
+          - 'src/EchoSharp/EchoSharp.csproj'
+          - 'components/EchoSharp.Whisper.net/EchoSharp.Whisper.net.csproj'
+          - 'components/EchoSharp.Onnx.SileroVad/EchoSharp.Onnx.SileroVad.csproj'
+          - 'components/EchoSharp.NAudio/EchoSharp.NAudio.csproj'
+
     steps:
       - name: 'Checkout repo'
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -18,7 +26,7 @@ jobs:
         uses: Yellow-Dog-Man/composite-actions-templates/.github/actions/dotnet-build@9ecab12bbf1b40d14409bbaa13cb4f2ddb1ceb60 # main
         with:
           dotnet-build-args: '-p:Version=${{ github.ref_name }} -o nupkgs'
-          dotnet-project-path: 'src/EchoSharp/EchoSharp.csproj'
+          dotnet-project-path: '${{ matrix.project }}'
           dotnet-build-type: 'pack'
 
       - name: 'Push NuGet'

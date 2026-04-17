@@ -377,3 +377,6 @@ FodyWeavers.xsd
 *.sln.iml
 
 /models/
+
+nupkgs/
+nupkgsfiles/

@@ -1,5 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup>
+    <PackageId>YellowDogMan.EchoSharp.Whisper.net</PackageId>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\src\EchoSharp\EchoSharp.csproj" />
   </ItemGroup>
