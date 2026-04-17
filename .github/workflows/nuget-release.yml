@@ -19,6 +19,7 @@ jobs:
         with:
           dotnet-build-args: '-p:Version=${{ github.ref_name }} -o nupkgs'
           dotnet-project-path: 'src/EchoSharp/EchoSharp.csproj'
+          dotnet-build-type: 'pack'
 
       - name: 'Push NuGet'
         uses: Yellow-Dog-Man/composite-actions-templates/.github/actions/dotnet-build-push-nuget@9ecab12bbf1b40d14409bbaa13cb4f2ddb1ceb60 # main
