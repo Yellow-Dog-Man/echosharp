@@ -1,0 +1,25 @@
+name: 'Build and release to'
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  publish-nuget:
+    name: 'Publish package to NuGet'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 'Checkout repo'
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: 'Build NuGet'
+        uses: Yellow-Dog-Man/composite-actions-templates/.github/actions/dotnet-build@9ecab12bbf1b40d14409bbaa13cb4f2ddb1ceb60 # main
+        with:
+          dotnet-build-args: '-p:Version=${{ github.ref_name }}'
+
+      - name: 'Push NuGet'
+        uses: Yellow-Dog-Man/composite-actions-templates/.github/actions/dotnet-build-push-nuget@9ecab12bbf1b40d14409bbaa13cb4f2ddb1ceb60 # main
+        with:
+          dotnet-nuget-auth-token: ${{ secrets.NUGET_TOKEN }}
