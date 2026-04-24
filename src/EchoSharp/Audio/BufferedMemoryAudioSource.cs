@@ -122,7 +122,7 @@ public class BufferedMemoryAudioSource : IAudioSource, IMemoryBackedAudioSource
     {
         ThrowIfNotInitialized();
 
-        if (frame.Length != Header.Channels)
+        if (frame.Length % Header.Channels != 0)
         {
             throw new ArgumentException("The frame size does not match the channels.", nameof(frame));
         }
